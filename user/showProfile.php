@@ -3,15 +3,13 @@ require_once "../connection/connection.php";
 session_start();
 
 $connect = connection();
-$idUser = $_SESSION['usuario']["id"];
 
-//devuelve los datos de publicacion junto con el username
-$sql = "SELECT *,
-            (SELECT username
-            FROM social_network.users 
-            WHERE users.id = publications.userId) AS username
-        FROM social_network.publications";
-$query = mysqli_query($connect, $sql);
+if(!isset($_SESSION['usuario'])){
+    header("Location: ../index.php");
+}
+
+
+$user = $_SESSION['usuario']['username'];
 
 ?>
 
@@ -74,43 +72,5 @@ $query = mysqli_query($connect, $sql);
                 }
             ?>
         </td>
-
-        <!-- Segunda columna que ocupa el resto del espacio -->
-        <td style="vertical-align: top; width: 100%;">
-
-            <!-- Tarjeta para poner un tweet -->
-            <div class="card" style="width: 100%;">
-                <div class="card-header">
-                    <b>Que estas pensando</b>
-                </div>
-                <div class="card-body">
-                <form action="./tweet.php" method="POST">
-                    <div class="mb-2">
-                        <textarea class="form-control alert alert-light" id="tweet" name="tweet" rows="1"  placeholder="Escriba un nuevo tweet"></textarea>
-                    </div>
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-primary">Twittar</button>
-                    </div>
-                </form>
-                </div>
-            </div>
-        </td>
-    </tr>
-</table>
-<br>
-<h3>Tweets</h3>
-<!-- Listado de tweets -->
-<?php while ($row = mysqli_fetch_array($query)): ?>
-  <div class="card w-100 mb-3">
-    <div class="card-body">
-      <form action="../landing/showTweet.php" method=POST>
-        <h5 class="card-title"><a href="../user/showProfile.php"> <?= $row['username'] ?></a></h5>
-        <p class="card-text"><?= $row['text'] ?></p>
-        <small class="text-center"><?= $row['createDate'] ?></small>
-      </form>
-    </div>
-  </div>
-<?php endwhile; ?>
-
 </body>
 </html>
