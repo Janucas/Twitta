@@ -13,6 +13,7 @@ $sql = "SELECT *,
         FROM social_network.publications";
 $query = mysqli_query($connect, $sql);
 
+
 ?>
 
 <!DOCTYPE html>
@@ -38,7 +39,7 @@ $query = mysqli_query($connect, $sql);
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-auto">
-        <a href="#" class="btn btn-outline-secondary">Todos para ti</a>
+        <a href="#" class="btn btn-outline-secondary">Explorar todos</a>
       </div>
       <div class="col-auto">
         <a href="#" class="btn btn-outline-secondary">Siguiendo</a>
@@ -103,14 +104,15 @@ $query = mysqli_query($connect, $sql);
 <?php while ($row = mysqli_fetch_array($query)): ?>
   <div class="card w-100 mb-3">
     <div class="card-body">
-      <form action="../landing/showTweet.php" method=POST>
-        <h5 class="card-title"><a href="../user/showProfile.php"> <?= $row['username'] ?></a></h5>
+      <form action="../user/showProfile.php" method=POST>
+      <input type="hidden" value="<?= $row['userId'] ?>" name="idOculta">
+        <h3><button type="submit" class="btn btn-link text-blue"><b><?= $row['username'] ?></b></button></h3>
         <p class="card-text"><?= $row['text'] ?></p>
         <small class="text-center"><?= $row['createDate'] ?></small>
+      
       </form>
     </div>
   </div>
-<?php endwhile; ?>
-
+<?php endwhile; ?> 
 </body>
 </html>

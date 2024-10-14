@@ -11,6 +11,19 @@ if(!isset($_SESSION['usuario'])){
 
 $user = $_SESSION['usuario']['username'];
 
+$idOculta = '';
+
+if(isset($_POST['idOculta'])){
+  $idOculta = $_POST['idOculta'];
+}else{
+  header("Location: ../index.php");
+}
+
+
+$sqlIdentityIDUser = "SELECT * FROM users WHERE id = '$idOculta'";
+$query = mysqli_query($connect, $sqlIdentityIDUser);
+$rowQuery = mysqli_fetch_assoc($query);
+
 ?>
 
 <!DOCTYPE html>
@@ -52,10 +65,9 @@ $user = $_SESSION['usuario']['username'];
         <td style="vertical-align: top;">
             <?php
                 if (isset($_SESSION["usuario"])) {
-                    $username = $_SESSION["usuario"]["username"];
-                    $email = $_SESSION["usuario"]["email"];
-                    $description = $_SESSION["usuario"]["description"];
-            ?>
+                    $username = $rowQuery['username'];
+                    $email = $rowQuery['email'];
+                    $description = $rowQuery['description']; ?>
             <!-- Tarjeta con los datos del usuario -->
             <div class="card" style="width: 18rem;">
                 <div class="card-header">
@@ -68,8 +80,9 @@ $user = $_SESSION['usuario']['username'];
             </div>
             <?php
                 } else {
-                    header("Location: ../index.php");
+                        header("Location: ../index.php");
                 }
+            
             ?>
         </td>
 </body>
