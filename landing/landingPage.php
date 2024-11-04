@@ -67,8 +67,8 @@ $query = mysqli_query($connect, $sql);
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
-            <b><a class="navbar-brand" href="#">Twitta</a></b>
-            <div class="ms-auto">
+        <b><a class="navbar-brand" href="../landing/landingPage.php">Twitta</a></b>
+        <div class="ms-auto">
                 <button id="theme-toggle" class="btn btn-outline-secondary mx-2">Modo Oscuro</button>
                 <a class="btn btn-danger" href="../auth/logout.php">Logout</a>
             </div>
