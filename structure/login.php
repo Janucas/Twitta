@@ -27,24 +27,23 @@
    <!--Nombre de usuario-->
    <div class="form-floating mb-3">
       <label class="form-label">Nombre de usuario</label>
-      <input type="text" class="form-control" id="name" name="name">
+      <input type="text" class="form-control" id="name" name="name" required pattern="^[a-zA-Z0-9]+$" 
+             title="El nombre de usuario solo puede contener letras y números.">
    </div>
 
    <!--Contraseña-->
    <div class="form-floating mb-3">
       <label class="form-label">Contraseña</label>
-      <input type="text" class="form-control" id="surname" name="surname">
+      <input type="password" class="form-control" id="password" name="password" required 
+             pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$"
+             title="La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una minúscula, un número y un carácter especial.">
    </div>
-<!--Boton de enviar-->
+   <!--Botón de enviar-->
    <br>
    <div class="text-center">
       <button type="submit" class="btn btn-primary">Acceder</button>
    </div>
-      <a href="signup.php">¿Aun no tienes una cuenta?</a>
- 
-  
+   <a href="signup.php">¿Aún no tienes una cuenta?</a>
 </form>
-
-
 </body>
 </html>
