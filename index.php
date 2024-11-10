@@ -19,7 +19,7 @@
        <div class="col-lg-8">
          <div class="card border-0 rounded-3 shadow-lg">
            <div class="card-body p-4">
-               <div class="h1 fw-light">Log In</div> <br>
+               <div class="h1 fw-light">Log In</div> <br>   
     <center>
         <img src="../media/22c99181-53b8-4a66-867f-15ed423e9fad.jpg" alt="Italian Trulli" width="60" height="60">
     </center>

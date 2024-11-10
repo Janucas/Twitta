@@ -54,11 +54,11 @@ $queryFollowers = mysqli_query($connect, $sqlFollowers);
 </head>
 
 <body>
-        <!-- Navbar -->
-        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
-        <b><a class="navbar-brand" href="../landing/landingPage.php">Twitta</a></b>
-        <div class="ms-auto">
+            <b><a class="navbar-brand" href="../landing/landingPage.php">Twitta</a></b>
+            <div class="ms-auto">
                 <button id="theme-toggle" class="btn btn-outline-secondary mx-2">Modo Oscuro</button>
                 <a class="btn btn-danger" href="../auth/logout.php">Logout</a>
             </div>
@@ -68,8 +68,10 @@ $queryFollowers = mysqli_query($connect, $sqlFollowers);
     <hr class="my-2">
     <div class="container">
         <h2>Seguidores</h2>
-        <a href="javascript:history.back()" class="btn btn-outline-secondary mb-3">Volver</a>
-        <?php while ($row = mysqli_fetch_assoc($queryFollowers)): ?>
+        <form action="../user/showProfile.php" method="POST">
+            <input type="hidden" name="idOculta" value="<?= $idUser ?>">
+            <button type="submit" class="btn btn-outline-secondary mb-3">Volver</button>
+        </form>        <?php while ($row = mysqli_fetch_assoc($queryFollowers)): ?>
             <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title"><?= htmlspecialchars($row['username']) ?></h5>
@@ -83,8 +85,8 @@ $queryFollowers = mysqli_query($connect, $sqlFollowers);
             </div>
         <?php endwhile; ?>
     </div>
-     <!-- Script para el cambio de tema -->
-     <script>
+    <!-- Script para el cambio de tema -->
+    <script>
         document.addEventListener("DOMContentLoaded", () => {
             const toggleButton = document.getElementById("theme-toggle");
             const darkMode = localStorage.getItem("theme") === "dark";

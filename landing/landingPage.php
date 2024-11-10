@@ -15,17 +15,17 @@ if ($showAll) {
                 (SELECT username
                  FROM social_network.users
                  WHERE users.id = publications.userId) AS username
-            FROM social_network.publications";
+            FROM social_network.publications ORDER BY createDate DESC";
 } else {
     // Mostrar solo los tweets de las personas que el usuario sigue
     $sql = "SELECT *,
                 (SELECT username
                  FROM social_network.users
                  WHERE users.id = publications.userId) AS username
-            FROM social_network.publications
+            FROM social_network.publications 
             WHERE userId IN (SELECT userToFollowId
                              FROM social_network.follows
-                             WHERE users_id = $idUser)";
+                             WHERE users_id = $idUser) ORDER BY createDate DESC";
 }
 
 $query = mysqli_query($connect, $sql);
@@ -103,9 +103,13 @@ $query = mysqli_query($connect, $sql);
                 ?>
                 <!-- Tarjeta con los datos del usuario -->
                 <div class="card" style="width: 18rem;">
-                    <div class="card-header">
-                        <li class="list-group-item"><b> <?php echo "Username: $username"; ?> </b><br></li>
-                    </div>
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <li class="list-group-item mb-0"><b> <?php echo "Username: $username"; ?> </b><br></li>
+                        <form action="../user/showProfile.php" method="POST">
+                            <input type="hidden" name="idOculta" value="<?= $idUser ?>">
+                            <button type="submit" class="btn btn-primary">Ver perfil</button>
+                        </form>
+                </div>
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item"> <?php echo "Email: $email"; ?> <br></li>
                         <li class="list-group-item"><?php echo "Description: $description"; ?> <br></li>
@@ -129,7 +133,7 @@ $query = mysqli_query($connect, $sql);
                     <div class="card-body">
                     <form action="./tweet.php" method="POST">
                         <div class="mb-2">
-                            <textarea class="form-control alert alert-light" id="tweet" name="tweet" rows="1"  placeholder="Escribe un nuevo tweet"></textarea>
+                            <textarea class="form-control alert alert-light" id="tweet" name="tweet" rows="1"  placeholder="Escribe un nuevo tweet (maximo 180 caracteres)"></textarea>
                         </div>
                         <div class="text-center">
                             <button type="submit" class="btn btn-primary">Twittear</button>

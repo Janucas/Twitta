@@ -17,14 +17,16 @@ $idOculta = '';
 // Obtener el ID del usuario que se está visualizando
 if (isset($_POST['idOculta'])) {
     $idOculta = $_POST['idOculta'];
+} elseif (isset($_GET['idOculta'])) {
+    $idOculta = $_GET['idOculta'];
 } else {
     header("Location: ../index.php");
     exit();
 }
 
 // Consultar datos del usuario
-$sqlIdentityIDUser = "SELECT * FROM users WHERE id = '$idOculta'";
-$query = mysqli_query($connect, $sqlIdentityIDUser);
+$sqlIdentityIDUser  = "SELECT * FROM users WHERE id = '$idOculta'";
+$query = mysqli_query($connect, $sqlIdentityIDUser );
 $rowQuery = mysqli_fetch_assoc($query);
 
 // Consultar todas las publicaciones del usuario
@@ -37,19 +39,14 @@ $isFollowing = mysqli_num_rows(mysqli_query($connect, $followQuery)) > 0;
 
 // Manejar la acción de seguir/dejar de seguir
 if (isset($_POST['follow'])) {
-    if (isset($_SESSION['usuario'])) { // Asegúrate de que la sesión está activa
-        if ($isFollowing) {
-            $unfollowQuery = "DELETE FROM follows WHERE users_id = (SELECT id FROM users WHERE username = '$user') AND userToFollowId = '$idOculta'";
-            mysqli_query($connect, $unfollowQuery);
-        } else {
-            $followQuery = "INSERT INTO follows (users_id, userToFollowId) VALUES ((SELECT id FROM users WHERE username = '$user'), '$idOculta')";
-            mysqli_query($connect, $followQuery);
-        }
-        header("Location: " . $_SERVER['PHP_SELF'] . "?idOculta=$idOculta");
-        exit();
+    if ($isFollowing) {
+        $unfollowQuery = "DELETE FROM follows WHERE users_id = (SELECT id FROM users WHERE username = '$user') AND userToFollowId = '$idOculta'";
+        mysqli_query($connect, $unfollowQuery);
+        $isFollowing = false;
     } else {
-        header("Location: ../index.php");
-        exit();
+        $followQuery = "INSERT INTO follows (users_id, userToFollowId) VALUES ((SELECT id FROM users WHERE username = '$user'), '$idOculta')";
+        mysqli_query($connect, $followQuery);
+        $isFollowing = true;
     }
 }
 
@@ -68,10 +65,13 @@ if (isset($_POST['edit_description']) && $idOculta == $userId) {
     $newDescription = mysqli_real_escape_string($connect, $_POST['description']);
     $updateDescriptionQuery = "UPDATE users SET description = '$newDescription' WHERE id = '$userId'";
     mysqli_query($connect, $updateDescriptionQuery);
-    // Redireccionar después de editar para evitar el reenvío del formulario
-    header("Location: " . $_SERVER['PHP_SELF'] . "?idOculta=$idOculta");
-    exit();
+    $_SESSION['usuario']['description'] = $newDescription;
 }
+
+// Consultar datos del usuario (de nuevo, para reflejar cambios)
+$sqlIdentityIDUser  = "SELECT * FROM users WHERE id = '$idOculta'";
+$query = mysqli_query($connect, $sqlIdentityIDUser );
+$rowQuery = mysqli_fetch_assoc($query);
 ?>
 
 <!DOCTYPE html>
@@ -81,10 +81,33 @@ if (isset($_POST['edit_description']) && $idOculta == $userId) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil de Usuario</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <style>
+        /* Estilos para el tema oscuro */
+        body.dark-mode {
+            background-color: #121212;
+            color: #ffffff;
+        }
+        .dark-mode .card {
+            background-color: #1e1e1e;
+            color: #ffffff;
+        }
+        .dark-mode .btn-outline-secondary,
+        .dark-mode .btn-outline-secondary:hover {
+            background-color: #ffffff;
+            color: #121212;
+            border-color: #ffffff;
+        }
+        .dark-mode #theme-toggle,
+        .dark-mode #theme-toggle:hover {
+            background-color: #ffffff;
+            color: #121212;
+            border-color: #ffffff;
+        }
+    </style>
 </head>
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <nav class="navbar navbar-expand -lg bg-body-tertiary">
         <div class="container-fluid">
             <b><a class="navbar-brand" href="../landing/landingPage.php">Twitta</a></b>
             <div class="ms-auto">
@@ -105,6 +128,7 @@ if (isset($_POST['edit_description']) && $idOculta == $userId) {
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item"><?php echo "Email: " . $rowQuery['email']; ?><br></li>
                         <li class="list-group-item">
+                            <!-- Mostrar la descripción del usuario que se está visualizando -->
                             <?php echo "Description: " . $rowQuery['description']; ?><br>
                         </li>
                     </ul>

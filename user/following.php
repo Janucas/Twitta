@@ -18,7 +18,6 @@ $sqlFollowing = "SELECT u.id, u.username, u.email, u.description
                  INNER JOIN social_network.follows f ON u.id = f.userToFollowId
                  WHERE f.users_id = $idUser";
 $queryFollowing = mysqli_query($connect, $sqlFollowing);
-
 ?>
 
 <!DOCTYPE html>
@@ -52,12 +51,13 @@ $queryFollowing = mysqli_query($connect, $sqlFollowing);
         }
     </style>
 </head>
+
 <body>
-        <!-- Navbar -->
-        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
-        <b><a class="navbar-brand" href="../landing/landingPage.php">Twitta</a></b>
-        <div class="ms-auto">
+            <b><a class="navbar-brand" href="../landing/landingPage.php">Twitta</a></b>
+            <div class="ms-auto">
                 <button id="theme-toggle" class="btn btn-outline-secondary mx-2">Modo Oscuro</button>
                 <a class="btn btn-danger" href="../auth/logout.php">Logout</a>
             </div>
@@ -67,7 +67,10 @@ $queryFollowing = mysqli_query($connect, $sqlFollowing);
     <hr class="my-2">
     <div class="container">
         <h2>Usuarios que sigue</h2>
-        <a href="javascript:history.back()" class="btn btn-outline-secondary mb-3">Volver</a>
+        <form action="../user/showProfile.php" method="POST">
+            <input type="hidden" name="idOculta" value="<?= $idUser ?>">
+            <button type="submit" class="btn btn-outline-secondary mb-3">Volver</button>
+        </form>
         <?php while ($row = mysqli_fetch_assoc($queryFollowing)): ?>
             <div class="card mb-3">
                 <div class="card-body">
@@ -82,8 +85,8 @@ $queryFollowing = mysqli_query($connect, $sqlFollowing);
             </div>
         <?php endwhile; ?>
     </div>
-     <!-- Script para el cambio de tema -->
-     <script>
+    <!-- Script para el cambio de tema -->
+    <script>
         document.addEventListener("DOMContentLoaded", () => {
             const toggleButton = document.getElementById("theme-toggle");
             const darkMode = localStorage.getItem("theme") === "dark";
